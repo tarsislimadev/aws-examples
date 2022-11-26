@@ -10,7 +10,7 @@ Samples to deploy AWS projects
 
 ## Samples
 
-[Adding a LightSail user](./samples/lightsail_user/README.md)
+[Adding a LightSail user](./lightsail/create-user/README.md)
 
 ## License
 
