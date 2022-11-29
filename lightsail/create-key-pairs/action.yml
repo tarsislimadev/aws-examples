@@ -1,0 +1,37 @@
+name: AWS Lightsail
+
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+      - 'main'
+
+jobs:
+  aws:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configuration
+        id: configuration
+        run: echo "keypairname=keypair-$( date +%Y%m%d%H%M%S )" >> $GITHUB_OUTPUT
+
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Creating a key pair in AWS Lightsail
+        run: aws lightsail create-key-pair --key-pair-name ${{ steps.configuration.outputs.keypairname }} 
+
+      - name: Listing key pairs in AWS Lightsail
+        run: aws lightsail get-key-pairs
+
+      - name: Getting key pairs in AWS Lightsail
+        run: aws lightsail get-key-pair --key-pair-name ${{ steps.configuration.outputs.keypairname }} 
+
+      - name: Deleting a key pair in AWS Lightsail
+        run: aws lightsail delete-key-pair --key-pair-name ${{ steps.configuration.outputs.keypairname }} 
